@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cek-kontrak-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:8000
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+    container_name: cek-kontrak-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - LLAMAPARSE_API_KEY=${LLAMAPARSE_API_KEY}
+      - UNSTRUCTURED_API_KEY=${UNSTRUCTURED_API_KEY}
+      - SECRET_KEY=${SECRET_KEY:-supersecretkey123}
+      - llamaparse_api_key=${LLAMAPARSE_API_KEY}
+    volumes:
+      - ./server/data:/app/data
+      - ./server/data/kuzu_db:/app/data/kuzu_db
+      - ./server/data/chroma_db:/app/data/chroma_db
+    restart: unless-stopped
+
+networks:
+  default:
+    name: cek-kontrak-network

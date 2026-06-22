@@ -2,9 +2,7 @@ version: "3.8"
 
 services:
   frontend:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ghcr.io/adlanmuammarshiddiq/cek-kontrak/frontend:latest
     container_name: cek-kontrak-frontend
     ports:
       - "3000:3000"
@@ -15,9 +13,7 @@ services:
     restart: unless-stopped
 
   backend:
-    build:
-      context: .
-      dockerfile: Dockerfile.server
+    image: ghcr.io/adlanmuammarshiddiq/cek-kontrak/backend:latest
     container_name: cek-kontrak-backend
     ports:
       - "8000:8000"
@@ -26,11 +22,8 @@ services:
       - LLAMAPARSE_API_KEY=${LLAMAPARSE_API_KEY}
       - UNSTRUCTURED_API_KEY=${UNSTRUCTURED_API_KEY}
       - SECRET_KEY=${SECRET_KEY:-supersecretkey123}
-      - llamaparse_api_key=${LLAMAPARSE_API_KEY}
     volumes:
       - ./server/data:/app/data
-      - ./server/data/kuzu_db:/app/data/kuzu_db
-      - ./server/data/chroma_db:/app/data/chroma_db
     restart: unless-stopped
 
 networks:
